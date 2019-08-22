@@ -1,0 +1,17 @@
+server:
+  port: 8083
+  context-path: /webapi
+spring:
+  application:
+    name: webapi
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    timeout: 300
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8887/eureka/
+  instance:
+    prefer-ip-address: true
