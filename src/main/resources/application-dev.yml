@@ -4,11 +4,6 @@ server:
 spring:
   application:
     name: webapi
-  redis:
-    host: localhost
-    port: 6379
-    password:
-    timeout: 300
 eureka:
   client:
     service-url:
