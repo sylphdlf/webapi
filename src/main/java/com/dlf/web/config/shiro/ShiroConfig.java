@@ -44,16 +44,9 @@ public class ShiroConfig {
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<String, String>();
         //注意过滤器配置顺序 不能颠倒
         //配置退出 过滤器,其中的具体的退出代码Shiro已经替我们实现了，登出后跳转配置的loginUrl
-//        filterChainDefinitionMap.put("/logout", "logout");
         // 配置不会被拦截的链接 顺序判断
-//        filterChainDefinitionMap.put("/static/**", "anon");
-        filterChainDefinitionMap.put("/login/**", "anon");
-        filterChainDefinitionMap.put("/reg/**", "anon");
-        filterChainDefinitionMap.put("/comm/msgSend", "anon");
-        filterChainDefinitionMap.put("/comm/getImgCode", "anon");
-        filterChainDefinitionMap.put("/dict/**", "anon");
-        filterChainDefinitionMap.put("/user/queryUserByUsername", "anon");
-        filterChainDefinitionMap.put("/user/pwdReset", "anon");
+        filterChainDefinitionMap.put("/login", "anon");
+        filterChainDefinitionMap.put("/register", "anon");
 //        filterChainDefinitionMap.put("/**", "authc");
         //配置shiro默认登录界面地址，前后端分离中登录界面跳转应由前端路由控制，后台仅返回json数据
         shiroFilterFactoryBean.setLoginUrl("/login/unAuth");
@@ -87,7 +80,7 @@ public class ShiroConfig {
     @Bean
     public MyShiroRealm myShiroRealm() {
         MyShiroRealm myShiroRealm = new MyShiroRealm();
-//        myShiroRealm.setCredentialsMatcher(null);
+        myShiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
         return myShiroRealm;
     }
     //自定义sessionManager
@@ -95,7 +88,7 @@ public class ShiroConfig {
     public SessionManager sessionManager() {
         ShiroSessionManager mySessionManager = new ShiroSessionManager();
         mySessionManager.setSessionDAO(redisSessionDAO());
-        //mySessionManager.setGlobalSessionTimeout(20000L);
+//        mySessionManager.setGlobalSessionTimeout(20000L);
         return mySessionManager;
     }
     @Bean

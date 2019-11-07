@@ -1,7 +1,5 @@
 package com.dlf;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.MultipartConfigFactory;
@@ -18,7 +16,7 @@ import javax.servlet.MultipartConfigElement;
 @SpringBootApplication
 @ServletComponentScan
 @EnableEurekaClient
-public class WebApplication {
+public class Application {
 
 
 //    @Value("${upload.comm.maxsize}")
@@ -27,7 +25,7 @@ public class WebApplication {
 //    private String requestMaxSize;
 
     public static void main(String[] args) {
-        SpringApplication app = new SpringApplication(WebApplication.class);
+        SpringApplication app = new SpringApplication(Application.class);
         app.run(args);
     }
 

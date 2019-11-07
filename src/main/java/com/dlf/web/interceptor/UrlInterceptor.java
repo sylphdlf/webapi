@@ -3,8 +3,6 @@ package com.dlf.web.interceptor;
 import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -12,15 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-//import com.dlf.business.manager.kafka.KafkaService;
-//import com.dlf.com.dlf.model.dto.user.UserResDTO;
-
 public class UrlInterceptor implements HandlerInterceptor {
-
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-//    @Autowired
-//    KafkaService kafkaService;
 
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         //根据注解判断url是否放行

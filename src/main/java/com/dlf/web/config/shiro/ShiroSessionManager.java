@@ -18,7 +18,7 @@ public class ShiroSessionManager extends DefaultWebSessionManager {
 
     private static final String USER_TICKET = "ut";
 
-    public ShiroSessionManager() {
+    ShiroSessionManager() {
         super();
     }
 

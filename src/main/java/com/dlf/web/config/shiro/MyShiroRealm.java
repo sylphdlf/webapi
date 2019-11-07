@@ -1,10 +1,9 @@
 package com.dlf.web.config.shiro;
 
-import com.dlf.web.controller.restTemplate.RestTemplateForRouter;
-import com.dlf.web.dto.BaseReqDTO;
+import com.alibaba.fastjson.JSONObject;
 import com.dlf.web.dto.GlobalResultDTO;
-import com.dlf.web.dto.UserReqDTO;
-import com.dlf.web.dto.UserVO;
+import com.dlf.web.enums.UserResultEnums;
+import com.dlf.web.utils.Md5Utils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -13,10 +12,12 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.web.client.RestTemplate;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 /**
  * Created by Administrator on 2017/12/11.
@@ -28,16 +29,8 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     @Autowired
     RestTemplate restTemplate;
-
-    private static final String QUERY_USERNAME = "/user/queryUserByUsername";
-    private static final String LOGIN_WITH_CODE = "/login/loginWithCode";
-    private static final String LOGIN = "/login/login";
-
     @Autowired
-    RestTemplateForRouter restTemplateForRouter;
-
-
-
+    LoadBalancerClient loadBalancerClient;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
@@ -69,53 +62,14 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         //获取用户的输入的账号
-        BaseReqDTO<UserReqDTO> baseReqDTO;
-        if(token instanceof MobileVerifyCodeToken){
-            MobileVerifyCodeToken mobileToken = (MobileVerifyCodeToken)token;
-            baseReqDTO = new BaseReqDTO<UserReqDTO>();
-            baseReqDTO.setAction(LOGIN_WITH_CODE);
-            UserReqDTO reqDTO = new UserReqDTO();
-            reqDTO.setUsername(mobileToken.getUsername());
-            reqDTO.setVerifyCode(mobileToken.getVerifyCode());
-            baseReqDTO.setData(reqDTO);
-            GlobalResultDTO<UserVO> resultDTO = this.restPost(baseReqDTO);
-            if(!resultDTO.isSuccess()){
-                throw new AuthenticationException(resultDTO.getMsg());
-            }
-            UserVO userVO = resultDTO.getData();
-            return new SimpleAuthenticationInfo(userVO, "ok", getName());
-        }else if (token instanceof RegisterAndLoginToken){
-            RegisterAndLoginToken registerAndLoginToken = (RegisterAndLoginToken)token;
-            UserVO userVO = new UserVO();
-            userVO.setId(registerAndLoginToken.getUserId());
-            userVO.setType(registerAndLoginToken.getType());
-            return new SimpleAuthenticationInfo(userVO, "ok", getName());
-        } else {
-            UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken)token;
-            baseReqDTO = new BaseReqDTO<UserReqDTO>();
-            baseReqDTO.setAction(LOGIN);
-            UserReqDTO reqDTO = new UserReqDTO();
-            reqDTO.setUsername(usernamePasswordToken.getUsername());
-            reqDTO.setPassword(String.valueOf(usernamePasswordToken.getPassword()));
-            baseReqDTO.setData(reqDTO);
-            GlobalResultDTO<UserVO> resultDTO = this.restPost(baseReqDTO);
-            if(!resultDTO.isSuccess()){
-                throw new AuthenticationException(resultDTO.getMsg());
-            }
-            UserVO userVO = resultDTO.getData();
-            return new SimpleAuthenticationInfo(userVO, usernamePasswordToken.getPassword() , getName());
+        UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken)token;
+        JSONObject loginObj = new JSONObject();
+        loginObj.put("username", usernamePasswordToken.getUsername());
+        loginObj.put("password", usernamePasswordToken.getPassword());
+        GlobalResultDTO resultDTO = restTemplate.postForObject("http://ROUTER/service/login", loginObj, GlobalResultDTO.class);
+        if(null == resultDTO || !resultDTO.isSuccess()){
+            throw new AuthenticationException(UserResultEnums.LOGIN_FAIL.getMsg());
         }
-    }
-
-    private GlobalResultDTO<UserVO> restPost(BaseReqDTO reqDTO){
-        try {
-            ResponseEntity<GlobalResultDTO<UserVO>> responseEntity =
-                    restTemplate.exchange(RestTemplateForRouter.ROUTER_SERVICE, HttpMethod.POST, RestTemplateForRouter.getHeader(reqDTO),
-                            new ParameterizedTypeReference<GlobalResultDTO<UserVO>>() {});
-            return responseEntity.getBody();
-        }catch (Exception e){
-            logger.error(e.getMessage());
-            throw new AuthenticationException(e.getMessage());
-        }
+        return new SimpleAuthenticationInfo(usernamePasswordToken.getUsername(), resultDTO.getData(), getName());
     }
 }

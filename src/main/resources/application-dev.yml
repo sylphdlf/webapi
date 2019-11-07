@@ -1,9 +1,16 @@
 server:
-  port: 8083
-  context-path: /webapi
+  port: 8885
+  servlet:
+    context-path: /webapi
 spring:
   application:
     name: webapi
+  redis:
+    database: 0
+    host: 127.0.0.1
+    password:
+    port: 6379
+    timeout: 300
 eureka:
   client:
     service-url:

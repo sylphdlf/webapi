@@ -30,8 +30,8 @@ public class RestTemplateConfig {
     @LoadBalanced
     public RestTemplate OKHttp3RestTemplate(){
         RestTemplate restTemplate = new RestTemplate(new OkHttp3ClientHttpRequestFactory());
-        restTemplate.getMessageConverters().clear();
-        restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter4());
+//        restTemplate.getMessageConverters().clear();
+//        restTemplate.getMessageConverters().add(new FastJsonHttpMessageConverter4());
         return restTemplate;
     }
 }
