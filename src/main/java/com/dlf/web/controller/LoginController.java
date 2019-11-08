@@ -8,8 +8,10 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,8 +56,8 @@ public class LoginController {
      * @return
      */
     @UrlPermissionIgnoreAnno
-    @RequestMapping(value = "/logout",method = RequestMethod.POST)
-    public GlobalResultDTO logout(@RequestBody JSONObject jsonObject){
+    @RequestMapping(value = "/logout",method = RequestMethod.GET)
+    public GlobalResultDTO logout(){
         try {
             Subject subject = SecurityUtils.getSubject();
             subject.logout();

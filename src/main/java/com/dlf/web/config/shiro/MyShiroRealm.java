@@ -2,8 +2,9 @@ package com.dlf.web.config.shiro;
 
 import com.alibaba.fastjson.JSONObject;
 import com.dlf.web.dto.GlobalResultDTO;
+import com.dlf.web.dto.UserInfo;
 import com.dlf.web.enums.UserResultEnums;
-import com.dlf.web.utils.Md5Utils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -11,13 +12,13 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.client.RestTemplate;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
+import java.io.Serializable;
 
 /**
  * Created by Administrator on 2017/12/11.
@@ -70,6 +71,8 @@ public class MyShiroRealm extends AuthorizingRealm {
         if(null == resultDTO || !resultDTO.isSuccess()){
             throw new AuthenticationException(UserResultEnums.LOGIN_FAIL.getMsg());
         }
-        return new SimpleAuthenticationInfo(usernamePasswordToken.getUsername(), resultDTO.getData(), getName());
+        ObjectMapper mapper = new ObjectMapper();
+        UserInfo userInfo = mapper.convertValue(resultDTO.getData(), UserInfo.class);
+        return new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(), getName());
     }
 }

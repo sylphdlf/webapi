@@ -40,7 +40,6 @@ public class MyExceptionHandler implements HandlerExceptionResolver {
         }else {
             logger.info(ex.toString());
             logger.info("MyExceptionHandler-----------------------------------------------");
-
         }
         view.setAttributesMap(attributes);
         mv.setView(view);
