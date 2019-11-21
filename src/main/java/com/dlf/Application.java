@@ -14,7 +14,6 @@ import javax.servlet.MultipartConfigElement;
  * Created by Administrator on 2017/4/28.
  */
 @SpringBootApplication
-@ServletComponentScan
 @EnableEurekaClient
 public class Application {
 
