@@ -17,3 +17,5 @@ eureka:
       defaultZone: http://127.0.0.1:8887/eureka/
   instance:
     prefer-ip-address: true
+router:
+  url: http://ROUTER/service

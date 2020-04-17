@@ -15,6 +15,7 @@
 		<springcloud.version>Greenwich.SR3</springcloud.version>
 		<netflixDependencies.version>2.1.1.RELEASE</netflixDependencies.version>
 		<fastjson.version>1.2.31</fastjson.version>
+		<lombok.version>1.18.10</lombok.version>
 	</properties>
 
 	<dependencyManagement>
@@ -94,17 +95,28 @@
 			<version>1.9.2</version>
 			<scope>compile</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>${lombok.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>${springboot.version}</version>
+		</dependency>
 <!--		<dependency>-->
 <!--			<groupId>org.springframework.boot</groupId>-->
 <!--			<artifactId>spring-boot-starter-aop</artifactId>-->
 <!--			<version>${springboot.version}</version>-->
 <!--		</dependency>-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-devtools</artifactId>-->
-<!--			<version>${springboot.version}</version>-->
-<!--			<scope>provided</scope>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<version>${springboot.version}</version>
+			<scope>dev</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
