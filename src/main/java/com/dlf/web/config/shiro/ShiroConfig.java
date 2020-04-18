@@ -1,6 +1,5 @@
 package com.dlf.web.config.shiro;
 
-import com.dlf.web.exception.MyExceptionHandler;
 import com.dlf.web.filter.UrlRedirectFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
@@ -164,8 +163,8 @@ public class ShiroConfig {
      * 注册全局异常处理
      * @return
      */
-    @Bean(name = "exceptionHandler")
-    public HandlerExceptionResolver handlerExceptionResolver() {
-        return new MyExceptionHandler();
-    }
+//    @Bean(name = "exceptionHandler")
+//    public HandlerExceptionResolver handlerExceptionResolver() {
+//        return new MyExceptionHandler();
+//    }
 }
