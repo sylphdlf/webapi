@@ -146,13 +146,6 @@ public class GlobalResultDTO<T> implements Serializable{
         return resultDto;
     }
 
-    public static GlobalResultDTO SUCCESS(String message) {
-        GlobalResultDTO resultDto = new GlobalResultDTO();
-        resultDto.setCode(SUCCESS_CODE);
-        resultDto.setMsg(message);
-        return resultDto;
-    }
-
     @SuppressWarnings("unchecked")
     public static GlobalResultDTO SUCCESS(Object obj) {
         GlobalResultDTO resultDto = new GlobalResultDTO();

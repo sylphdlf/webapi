@@ -1,7 +1,7 @@
 package com.dlf.web.controller.wxsp;
 
 import com.dlf.web.anno.UrlPermissionIgnoreAnno;
-import com.dlf.web.anno.UtVerifyAnno;
+import com.dlf.web.anno.KeyVerifyAnno;
 import com.dlf.web.dto.GlobalResultDTO;
 import com.dlf.web.dto.WxUserDTO;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,9 +24,10 @@ public class WxspLoginController {
     private String routerUrl;
 
     @UrlPermissionIgnoreAnno
-    @UtVerifyAnno
+    @KeyVerifyAnno
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public GlobalResultDTO register(@RequestBody WxUserDTO wxUserDTO, HttpServletRequest request){
-        return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
+//        return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
+        return GlobalResultDTO.SUCCESS();
     }
 }

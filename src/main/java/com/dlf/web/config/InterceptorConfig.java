@@ -1,7 +1,7 @@
 package com.dlf.web.config;
 
 import com.dlf.web.interceptor.UrlInterceptor;
-import com.dlf.web.interceptor.UserTicketInterceptor;
+import com.dlf.web.interceptor.ReqKeyInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -15,13 +15,13 @@ public class InterceptorConfig extends WebMvcConfigurationSupport {
         return new UrlInterceptor();
     }
     @Bean
-    UserTicketInterceptor userTicketInterceptor(){
-        return new UserTicketInterceptor();
+    ReqKeyInterceptor reqKeyInterceptor(){
+        return new ReqKeyInterceptor();
     }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(urlInterceptor());
-        registry.addInterceptor(userTicketInterceptor());
+        registry.addInterceptor(reqKeyInterceptor());
     }
 }
