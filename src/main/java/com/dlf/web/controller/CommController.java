@@ -57,7 +57,7 @@ public class CommController {
      */
     @UrlPermissionIgnoreAnno
     @RequestMapping(value = "/getKey",method = RequestMethod.GET)
-    public GlobalResultDTO getUT(HttpServletRequest request) throws NoSuchAlgorithmException {
+    public GlobalResultDTO getKey(HttpServletRequest request) throws NoSuchAlgorithmException {
         String realIp = WebUtils.getRealIP(request);
         String key = Md5Utils.md5Encoding(realIp + UUID.randomUUID());
         ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();

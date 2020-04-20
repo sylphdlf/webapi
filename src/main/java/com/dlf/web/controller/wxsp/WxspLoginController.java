@@ -27,7 +27,6 @@ public class WxspLoginController {
     @KeyVerifyAnno
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public GlobalResultDTO register(@RequestBody WxUserDTO wxUserDTO, HttpServletRequest request){
-//        return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
-        return GlobalResultDTO.SUCCESS();
+        return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
     }
 }

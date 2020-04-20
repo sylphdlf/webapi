@@ -115,7 +115,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<version>${springboot.version}</version>
-			<scope>dev</scope>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
