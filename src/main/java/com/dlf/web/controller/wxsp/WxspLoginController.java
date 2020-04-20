@@ -24,7 +24,7 @@ public class WxspLoginController {
     private String routerUrl;
 
     @UrlPermissionIgnoreAnno
-    @KeyVerifyAnno
+//    @KeyVerifyAnno
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public GlobalResultDTO register(@RequestBody WxUserDTO wxUserDTO, HttpServletRequest request){
         return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
