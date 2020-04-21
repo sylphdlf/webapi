@@ -12,4 +12,6 @@ public class WxUserDTO {
     private String mobile;
 
     private String verifyCode;
+
+    private String remarks;
 }
