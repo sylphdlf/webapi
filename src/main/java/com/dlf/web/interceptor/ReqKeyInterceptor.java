@@ -24,9 +24,14 @@ public class ReqKeyInterceptor implements HandlerInterceptor {
     private StringRedisTemplate stringRedisTemplate;
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) {
-        HandlerMethod handlerMethod = (HandlerMethod)o;
-        KeyVerifyAnno anno = handlerMethod.getMethodAnnotation(KeyVerifyAnno.class);
-        if(null == anno){
+        System.out.println(request.getRequestURI());
+        if(o instanceof HandlerMethod){
+            HandlerMethod handlerMethod = (HandlerMethod)o;
+            KeyVerifyAnno anno = handlerMethod.getMethodAnnotation(KeyVerifyAnno.class);
+            if(null == anno){
+                return true;
+            }
+        }else {
             return true;
         }
         String realIP = WebUtils.getRealIP(request);

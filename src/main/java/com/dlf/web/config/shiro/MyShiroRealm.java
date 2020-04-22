@@ -63,16 +63,13 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         //获取用户的输入的账号
-        UsernamePasswordToken usernamePasswordToken = (UsernamePasswordToken)token;
-        JSONObject loginObj = new JSONObject();
-        loginObj.put("username", usernamePasswordToken.getUsername());
-        loginObj.put("password", usernamePasswordToken.getPassword());
-        GlobalResultDTO resultDTO = restTemplate.postForObject("http://ROUTER/service/login", loginObj, GlobalResultDTO.class);
+        UsernamePasswordToken loginToken = (UsernamePasswordToken)token;
+        UserInfo userInfo = new UserInfo();
+        userInfo.setUsername(loginToken.getUsername());
+        GlobalResultDTO<UserInfo> resultDTO = restTemplate.postForObject("http://ROUTER/service/user/getUserByUsername", userInfo, GlobalResultDTO.class);
         if(null == resultDTO || !resultDTO.isSuccess()){
             throw new AuthenticationException(UserResultEnums.LOGIN_FAIL.getMsg());
         }
-        ObjectMapper mapper = new ObjectMapper();
-        UserInfo userInfo = mapper.convertValue(resultDTO.getData(), UserInfo.class);
-        return new SimpleAuthenticationInfo(userInfo, userInfo.getPassword(), getName());
+        return new SimpleAuthenticationInfo(userInfo, resultDTO.getData().getPassword(), getName());
     }
 }

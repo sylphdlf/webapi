@@ -5,16 +5,12 @@ import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import com.dlf.web.dto.GlobalResultDTO;
 import com.dlf.web.enums.GlobalResultEnum;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2017/5/7.
@@ -31,14 +27,8 @@ public class LoginController {
     public GlobalResultDTO login(@RequestBody JSONObject jsonObject) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.getString("username"), jsonObject.getString("password"));
-        try {
-            subject.login(token);
-        }catch (AuthenticationException e){
-            return GlobalResultDTO.FAIL(GlobalResultEnum.FAIL.getCode(), e.getMessage());
-        }
-        Map<String, Object> returnMap = new HashMap<>();
-        returnMap.put("ut", subject.getSession().getId().toString());
-        return GlobalResultDTO.SUCCESS(returnMap);
+        subject.login(token);
+        return GlobalResultDTO.SUCCESS(subject.getSession().getId().toString());
     }
 
     /**
@@ -49,6 +39,16 @@ public class LoginController {
     @RequestMapping(value = "/unAuth",method = RequestMethod.GET)
     public GlobalResultDTO unAuth() {
         return GlobalResultDTO.FAIL(GlobalResultEnum.LOG_OUT.getCode(), GlobalResultEnum.LOG_OUT.getMsg());
+    }
+
+    /**
+     * 出错
+     * @return GlobalResultDTO
+     */
+    @UrlPermissionIgnoreAnno
+    @RequestMapping(value = "/error",method = RequestMethod.GET)
+    public GlobalResultDTO error() {
+        return GlobalResultDTO.FAIL(GlobalResultEnum.FAIL.getCode(), GlobalResultEnum.FAIL.getMsg());
     }
 
     /**
