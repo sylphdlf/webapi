@@ -3,6 +3,7 @@ package com.dlf.web.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import com.dlf.web.dto.GlobalResultDTO;
+import com.dlf.web.dto.UserInfo;
 import com.dlf.web.enums.GlobalResultEnum;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
