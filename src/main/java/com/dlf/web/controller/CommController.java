@@ -43,6 +43,8 @@ public class CommController {
 
     /**
      * 访问service的统一入口
+     * @param request
+     * @param jsonObject
      * @return
      */
     @RequestMapping(value = "/comm",method = RequestMethod.POST)
@@ -52,8 +54,8 @@ public class CommController {
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
         headers.set("userId", ((UserInfo)subject.getPrincipal()).getId() + "");
-        headers.set("username", ((UserInfo)subject.getPrincipal()).getUsername())
-        HttpEntity entity = new HttpEntity<>(jsonObject,headers)
+        headers.set("username", ((UserInfo)subject.getPrincipal()).getUsername());
+        HttpEntity entity = new HttpEntity<>(jsonObject,headers);
         ResponseEntity<GlobalResultDTO> responseEntity = restTemplate.exchange(routerUrl + request.getAttribute("url"), HttpMethod.POST, entity, new ParameterizedTypeReference<GlobalResultDTO>() {});
         return responseEntity.getBody();
 //        return restTemplate.postForObject(routerUrl + request.getAttribute("url"), jsonObject, GlobalResultDTO.class);
