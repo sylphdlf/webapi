@@ -43,6 +43,8 @@ public class CommController {
 
     /**
      * 访问service的统一入口
+     * @param request
+     * @param jsonObject
      * @return
      */
     @RequestMapping(value = "/comm",method = RequestMethod.POST)
