@@ -24,27 +24,27 @@ public class ReqKeyInterceptor implements HandlerInterceptor {
     private StringRedisTemplate stringRedisTemplate;
 
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object o) {
-        System.out.println(request.getRequestURI());
-        if(o instanceof HandlerMethod){
-            HandlerMethod handlerMethod = (HandlerMethod)o;
-            KeyVerifyAnno anno = handlerMethod.getMethodAnnotation(KeyVerifyAnno.class);
-            if(null == anno){
-                return true;
-            }
-        }else {
-            return true;
-        }
-        String realIP = WebUtils.getRealIP(request);
-        String reqKey = request.getHeader("reqKey");
-        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
-        String orgReqKey = valueOperations.get(realIP);
-        if(StringUtils.isEmpty(reqKey)){
-            throw new MyException(GlobalResultEnum.REQUEST_KEY_NULL.getCode(), GlobalResultEnum.REQUEST_KEY_NULL.getMsg());
-        }
-        if(StringUtils.isEmpty(orgReqKey) || !StringUtils.equals(reqKey, orgReqKey)){
-            throw new MyException(GlobalResultEnum.REQUEST_KEY_INVALID.getCode(), GlobalResultEnum.REQUEST_KEY_INVALID.getMsg());
-        }
-        stringRedisTemplate.delete(realIP);
+//        System.out.println(request.getRequestURI());
+//        if(o instanceof HandlerMethod){
+//            HandlerMethod handlerMethod = (HandlerMethod)o;
+//            KeyVerifyAnno anno = handlerMethod.getMethodAnnotation(KeyVerifyAnno.class);
+//            if(null == anno){
+//                return true;
+//            }
+//        }else {
+//            return true;
+//        }
+//        String realIP = WebUtils.getRealIP(request);
+//        String reqKey = request.getHeader("reqKey");
+//        ValueOperations<String, String> valueOperations = stringRedisTemplate.opsForValue();
+//        String orgReqKey = valueOperations.get(realIP);
+//        if(StringUtils.isEmpty(reqKey)){
+//            throw new MyException(GlobalResultEnum.REQUEST_KEY_NULL.getCode(), GlobalResultEnum.REQUEST_KEY_NULL.getMsg());
+//        }
+//        if(StringUtils.isEmpty(orgReqKey) || !StringUtils.equals(reqKey, orgReqKey)){
+//            throw new MyException(GlobalResultEnum.REQUEST_KEY_INVALID.getCode(), GlobalResultEnum.REQUEST_KEY_INVALID.getMsg());
+//        }
+//        stringRedisTemplate.delete(realIP);
         return true;
     }
 
