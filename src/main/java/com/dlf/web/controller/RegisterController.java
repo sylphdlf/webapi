@@ -22,8 +22,4 @@ public class RegisterController {
     public GlobalResultDTO registerWithCode(@RequestBody JSONObject jsonObject){
        return restTemplate.postForObject("http://ROUTER/service/register", jsonObject, GlobalResultDTO.class);
     }
-    @RequestMapping(value = "/wxspRegister", method = RequestMethod.POST)
-    public GlobalResultDTO wxspRegister(@RequestBody JSONObject jsonObject){
-        return restTemplate.postForObject("http://ROUTER/service/user/wxspRegister", jsonObject, GlobalResultDTO.class);
-    }
 }

@@ -1,5 +1,6 @@
 package com.dlf.web.controller.wxsp;
 
+import com.alibaba.fastjson.JSONObject;
 import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import com.dlf.web.anno.KeyVerifyAnno;
 import com.dlf.web.dto.GlobalResultDTO;
@@ -23,10 +24,19 @@ public class WxspLoginController {
     @Value("${router.url}")
     private String routerUrl;
 
-    @UrlPermissionIgnoreAnno
+//    @UrlPermissionIgnoreAnno
 //    @KeyVerifyAnno
-    @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public GlobalResultDTO register(@RequestBody WxUserDTO wxUserDTO, HttpServletRequest request){
-        return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
+//    @RequestMapping(value = "/register",method = RequestMethod.POST)
+//    public GlobalResultDTO register(@RequestBody WxUserDTO wxUserDTO, HttpServletRequest request){
+//        return restTemplate.postForObject(routerUrl + request.getServletPath(), wxUserDTO, GlobalResultDTO.class);
+//    }
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public GlobalResultDTO register(@RequestBody JSONObject jsonObject){
+        return restTemplate.postForObject("http://ROUTER/service/user/wxspRegister", jsonObject, GlobalResultDTO.class);
+    }
+
+    @RequestMapping(value = "/checkUser", method = RequestMethod.POST)
+    public GlobalResultDTO checkUser(@RequestBody JSONObject jsonObject){
+        return restTemplate.postForObject("http://ROUTER/service/user/checkWxspUser", jsonObject, GlobalResultDTO.class);
     }
 }
