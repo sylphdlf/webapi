@@ -5,6 +5,9 @@ import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import com.dlf.web.anno.KeyVerifyAnno;
 import com.dlf.web.dto.GlobalResultDTO;
 import com.dlf.web.dto.WxUserDTO;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +40,15 @@ public class WxspLoginController {
 
     @RequestMapping(value = "/checkUser", method = RequestMethod.POST)
     public GlobalResultDTO checkUser(@RequestBody JSONObject jsonObject){
-        return restTemplate.postForObject("http://ROUTER/service/user/checkWxspUser", jsonObject, GlobalResultDTO.class);
+        GlobalResultDTO resultDTO = restTemplate.postForObject("http://ROUTER/service/user/checkWxspUser", jsonObject, GlobalResultDTO.class);
+        if(null != resultDTO && resultDTO.isSuccess()){
+            //模拟登陆，返回ut
+            Subject subject = SecurityUtils.getSubject();
+            UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.getString("username"), jsonObject.getString("password"));
+            subject.login(token);
+            resultDTO.setMsg(subject.getSession().getId().toString());
+            return resultDTO;
+        }
+        return resultDTO;
     }
 }
