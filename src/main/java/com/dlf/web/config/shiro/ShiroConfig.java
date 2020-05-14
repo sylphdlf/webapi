@@ -162,12 +162,4 @@ public class ShiroConfig {
         return authorizationAttributeSourceAdvisor;
     }
 
-    /**
-     * 注册全局异常处理
-     * @return
-     */
-//    @Bean(name = "exceptionHandler")
-//    public HandlerExceptionResolver handlerExceptionResolver() {
-//        return new MyExceptionHandler();
-//    }
 }

@@ -3,7 +3,9 @@ package com.dlf.web.controller.wxsp;
 import com.alibaba.fastjson.JSONObject;
 import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import com.dlf.web.anno.KeyVerifyAnno;
+import com.dlf.web.config.shiro.WxLoginToken;
 import com.dlf.web.dto.GlobalResultDTO;
+import com.dlf.web.dto.UserInfo;
 import com.dlf.web.dto.WxUserDTO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -44,7 +46,9 @@ public class WxspLoginController {
         if(null != resultDTO && resultDTO.isSuccess()){
             //模拟登陆，返回ut
             Subject subject = SecurityUtils.getSubject();
-            UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.getString("username"), jsonObject.getString("password"));
+            WxLoginToken token = new WxLoginToken(jsonObject.getString("openId"),
+                    jsonObject.getString("openId").toCharArray(),
+                    JSONObject.parseObject(JSONObject.toJSONString(resultDTO.getData()), UserInfo.class));
             subject.login(token);
             resultDTO.setMsg(subject.getSession().getId().toString());
             return resultDTO;

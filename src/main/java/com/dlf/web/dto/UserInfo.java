@@ -8,12 +8,14 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserInfo implements Serializable{
 
-    private static final long serialVersionUID = -991165482392593146L;
+    private static final long serialVersionUID = 564436460753562054L;
 
     private Long id;
 
     private String username;
 
     private String password;
+
+    private Integer isAdmin;
 
 }

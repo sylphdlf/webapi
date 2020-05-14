@@ -3,6 +3,7 @@ package com.dlf.web.config.shiro;
 import com.dlf.web.dto.GlobalResultDTO;
 import com.dlf.web.dto.UserInfo;
 import com.dlf.web.enums.UserResultEnums;
+import com.dlf.web.utils.Md5Utils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -14,6 +15,8 @@ import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+
+import java.security.NoSuchAlgorithmException;
 
 /**
  * Created by Administrator on 2017/12/11.
@@ -54,6 +57,11 @@ public class MyShiroRealm extends AuthorizingRealm {
         return info;
     }
 
+    @Override
+    public boolean supports(AuthenticationToken token){
+        return token instanceof WxLoginToken;
+    }
+
     /**
      * 验证用户输入的账号和密码是否正确
      * @param token
@@ -62,6 +70,26 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+        if(token instanceof UsernamePasswordToken){
+            return usernamePasswordLogin(token);
+        }else if(token instanceof WxLoginToken){
+            return wxLogin(token);
+        }
+        return null;
+    }
+
+    private AuthenticationInfo wxLogin(AuthenticationToken token){
+        WxLoginToken loginToken = (WxLoginToken)token;
+        SimpleAuthenticationInfo authenticationInfo = null;
+        try {
+            authenticationInfo = new SimpleAuthenticationInfo(loginToken.getUserInfo(), Md5Utils.md5Encoding(loginToken.getPrincipal().toString()), getName());
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return authenticationInfo;
+    }
+
+    private AuthenticationInfo usernamePasswordLogin(AuthenticationToken token){
         //获取用户的输入的账号
         UsernamePasswordToken loginToken = (UsernamePasswordToken)token;
         UserInfo userInfo = new UserInfo();
