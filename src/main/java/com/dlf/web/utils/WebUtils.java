@@ -1,8 +1,26 @@
 package com.dlf.web.utils;
 
+import com.dlf.web.dto.UserInfo;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+
 import javax.servlet.http.HttpServletRequest;
 
 public class WebUtils {
+    /**
+     * 获取绑定了用户信息的请求头
+     * @return
+     */
+    public static HttpHeaders getHeaders(){
+        Subject subject = SecurityUtils.getSubject();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("userId", ((UserInfo)subject.getPrincipal()).getId() + "");
+        headers.set("username", ((UserInfo)subject.getPrincipal()).getUsername());
+        return headers;
+    }
 
     /**
      * 获取真实访问ip
