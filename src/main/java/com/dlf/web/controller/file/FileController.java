@@ -17,6 +17,9 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 /**
  * Created by Administrator on 2017/5/7.
@@ -48,27 +51,32 @@ public class FileController {
         HttpEntity entity = new HttpEntity<>(jsonObject, WebUtils.getHeaders());
         GlobalResultDTO resultDTO = restTemplate
                 .exchange(routerUrl + SAVE_FILE, HttpMethod.POST, entity, GlobalResultDTO.class).getBody();
-        String filePath = "";
-        if(null != resultDTO && resultDTO.isSuccess()){
-            return resultDTO;//已经有重复文件，无需再次保存
-        }else if(null != resultDTO){
-            filePath = resultDTO.getMsg();//获取文件存储路径
-        }else{
+        if(null == resultDTO || resultDTO.isFail()){
             return GlobalResultDTO.FAIL();
         }
         //保存文件
-        try {
-            file.transferTo(new File(filePath));
-        }catch (IOException e){
-        //数据回滚
-            for(int i = 1;i <= 3; i++){
-                GlobalResultDTO rollback = restTemplate
-                        .exchange(routerUrl + ROLLBACK_FILE, HttpMethod.POST, entity, GlobalResultDTO.class).getBody();
-                if(rollback != null && rollback.isSuccess()){
-                    break;
+        Consumer<String> fileSaveConsumer = t -> {
+            try {
+                file.transferTo(new File(t));
+            } catch (IOException e) {
+                //数据回滚
+                for(int i = 1;i <= 3; i++){
+                    GlobalResultDTO rollback = restTemplate
+                            .exchange(routerUrl + ROLLBACK_FILE, HttpMethod.POST, entity, GlobalResultDTO.class).getBody();
+                    if(rollback != null && rollback.isSuccess()){
+                        break;
+                    }
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
                 }
             }
-        }
+        };
+        Optional.of(resultDTO)
+                .filter(t -> t.isSuccess() && StringUtils.isNotBlank(t.getData() + ""))
+                .ifPresent(t -> fileSaveConsumer.accept(t.getData() + ""));
         return GlobalResultDTO.SUCCESS();
     }
 }

@@ -139,6 +139,10 @@ public class GlobalResultDTO<T> implements Serializable{
         return StringUtils.equalsIgnoreCase(SUCCESS_CODE, code);
     }
 
+    public boolean isFail() {
+        return !StringUtils.equalsIgnoreCase(SUCCESS_CODE, code);
+    }
+
 
     public static GlobalResultDTO SUCCESS() {
         GlobalResultDTO resultDto = new GlobalResultDTO();
