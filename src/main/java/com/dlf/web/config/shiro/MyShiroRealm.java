@@ -59,7 +59,7 @@ public class MyShiroRealm extends AuthorizingRealm {
 
     @Override
     public boolean supports(AuthenticationToken token){
-        return token instanceof WxLoginToken;
+        return token instanceof UsernamePasswordToken;
     }
 
     /**
@@ -70,10 +70,10 @@ public class MyShiroRealm extends AuthorizingRealm {
      */
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-        if(token instanceof UsernamePasswordToken){
-            return usernamePasswordLogin(token);
-        }else if(token instanceof WxLoginToken){
+        if(token instanceof WxLoginToken){
             return wxLogin(token);
+        }else if(token instanceof UsernamePasswordToken){
+            return usernamePasswordLogin(token);
         }
         return null;
     }

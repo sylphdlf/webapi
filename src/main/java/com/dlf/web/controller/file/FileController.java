@@ -35,7 +35,7 @@ public class FileController {
     private String routerUrl;
 
     private static final String SAVE_FILE = "/file/save";
-    private static final String ROLLBACK_FILE = "/file/save";
+    private static final String ROLLBACK_FILE = "/file/rollback";
 
 
     @RequestMapping(value = "/upload")

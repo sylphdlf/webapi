@@ -2,21 +2,20 @@ package com.dlf.web.config.shiro;
 
 import com.dlf.web.dto.UserInfo;
 import lombok.Data;
-import org.apache.shiro.authc.AuthenticationToken;
+import lombok.EqualsAndHashCode;
+import org.apache.shiro.authc.UsernamePasswordToken;
+
+@EqualsAndHashCode(callSuper = true)
 @Data
-public class WxLoginToken implements AuthenticationToken {
+public class WxLoginToken extends UsernamePasswordToken  {
 
     private static final long serialVersionUID = 2307992506291029922L;
 
     private Object userInfo;
 
-    private String username;
-
-    private char[] password;
-
     public WxLoginToken(String username, char[] password, UserInfo userInfo) {
-        this.username = username;
-        this.password = password;
+        super.setUsername(username);
+        super.setPassword(password);
         this.userInfo = userInfo;
     }
 
