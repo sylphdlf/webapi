@@ -109,11 +109,12 @@ public class MyShiroRealm extends AuthorizingRealm {
         return responseEntity.getBody();
     }
 
-    private static HttpEntity getHeader(Object reqDTO){
+    private static HttpEntity getHeader(UserInfo reqDTO){
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
         headers.set("ip", WebUtils.getIp());
+        headers.set("username", reqDTO.getUsername());
         return new HttpEntity<>(reqDTO,headers);
     }
 }
