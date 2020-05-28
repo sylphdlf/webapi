@@ -9,6 +9,20 @@ import org.springframework.http.MediaType;
 import javax.servlet.http.HttpServletRequest;
 
 public class WebUtils {
+
+    private static final ThreadLocal<String> ipLocal = new ThreadLocal<>();
+
+    public static void setIp(String ip){
+        ipLocal.set(ip);
+    }
+
+    public static void setIp(HttpServletRequest request){
+        ipLocal.set(getRealIP(request));
+    }
+
+    public static String getIp(){
+        return ipLocal.get();
+    }
     /**
      * 获取绑定了用户信息的请求头
      * @return

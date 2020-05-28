@@ -1,5 +1,6 @@
 package com.dlf.web.interceptor;
 
+import com.dlf.web.utils.WebUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UrlInterceptor implements HandlerInterceptor {
 
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        WebUtils.setIp(httpServletRequest);
         //根据注解判断url是否放行
 //        HandlerMethod handlerMethod = (HandlerMethod)o;
 //        UrlPermissionIgnoreAnno anno = handlerMethod.getMethodAnnotation(UrlPermissionIgnoreAnno.class);

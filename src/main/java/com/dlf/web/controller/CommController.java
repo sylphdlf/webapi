@@ -8,7 +8,6 @@ import com.dlf.web.utils.Md5Utils;
 import com.dlf.web.utils.WebUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -50,15 +49,18 @@ public class CommController {
     @RequestMapping(value = "/comm",method = RequestMethod.POST)
     public GlobalResultDTO comm(HttpServletRequest request, @RequestBody JSONObject jsonObject){
         Subject subject = SecurityUtils.getSubject();
+        String requestUrl = request.getAttribute("url") + "";
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
         headers.set("userId", ((UserInfo)subject.getPrincipal()).getId() + "");
         headers.set("username", ((UserInfo)subject.getPrincipal()).getUsername());
+        headers.set("ip", WebUtils.getRealIP(request));
+        headers.set("url", requestUrl);
+        headers.set("session_id", subject.getSession().getId() + "");
         HttpEntity entity = new HttpEntity<>(jsonObject,headers);
-        ResponseEntity<GlobalResultDTO> responseEntity = restTemplate.exchange(routerUrl + request.getAttribute("url"), HttpMethod.POST, entity, new ParameterizedTypeReference<GlobalResultDTO>() {});
+        ResponseEntity<GlobalResultDTO> responseEntity = restTemplate.exchange(routerUrl + requestUrl, HttpMethod.POST, entity, new ParameterizedTypeReference<GlobalResultDTO>() {});
         return responseEntity.getBody();
-//        return restTemplate.postForObject(routerUrl + request.getAttribute("url"), jsonObject, GlobalResultDTO.class);
     }
 
     /**

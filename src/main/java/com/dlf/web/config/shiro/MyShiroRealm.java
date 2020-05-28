@@ -4,6 +4,7 @@ import com.dlf.web.dto.GlobalResultDTO;
 import com.dlf.web.dto.UserInfo;
 import com.dlf.web.enums.UserResultEnums;
 import com.dlf.web.utils.Md5Utils;
+import com.dlf.web.utils.WebUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -94,7 +95,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         UsernamePasswordToken loginToken = (UsernamePasswordToken)token;
         UserInfo userInfo = new UserInfo();
         userInfo.setUsername(loginToken.getUsername());
-        GlobalResultDTO<UserInfo> resultDTO = this.postForJsonObject(userInfo, routerUrl + "/user/getUserByUsername");
+        GlobalResultDTO<UserInfo> resultDTO = this.postForJsonObject(userInfo, routerUrl + "/user/getByUsername");
         if(null == resultDTO || !resultDTO.isSuccess()){
             throw new AuthenticationException(UserResultEnums.LOGIN_FAIL.getMsg());
         }
@@ -112,6 +113,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         HttpHeaders headers = new HttpHeaders();
         MediaType type = MediaType.parseMediaType("application/json; charset=UTF-8");
         headers.setContentType(type);
+        headers.set("ip", WebUtils.getIp());
         return new HttpEntity<>(reqDTO,headers);
     }
 }

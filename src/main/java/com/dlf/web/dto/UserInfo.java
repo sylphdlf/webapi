@@ -8,7 +8,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserInfo implements Serializable{
 
-    private static final long serialVersionUID = 564436460753562054L;
+    private static final long serialVersionUID = -2047610454774672454L;
 
     private Long id;
 
@@ -17,5 +17,7 @@ public class UserInfo implements Serializable{
     private String password;
 
     private Integer isAdmin;
+
+    private String ip;
 
 }

@@ -1,9 +1,11 @@
 package com.dlf.web.filter;
 
+import com.dlf.web.utils.WebUtils;
 import com.google.common.collect.ImmutableList;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public class UrlRedirectFilter implements Filter{
