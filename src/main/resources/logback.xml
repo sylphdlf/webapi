@@ -7,9 +7,9 @@
         </encoder>
     </appender>
     <appender name="baseLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>log/web_api.log</File>
+        <File>log/webApi.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>log/web_api.log.%d.%i</fileNamePattern>
+            <fileNamePattern>log/webApi.log.%d.%i</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- or whenever the file size reaches 64 MB -->
                 <maxFileSize>64 MB</maxFileSize>
