@@ -22,10 +22,29 @@
             <charset>UTF-8</charset> <!-- 此处设置字符集 -->
         </encoder>
     </appender>
+    <appender name="errLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>log/webApi_err.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>log/webApi_err.log.%d.%i</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy  class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 64 MB -->
+                <maxFileSize>64 MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>
+                %d %p (%file:%line\)- %m%n
+            </pattern>
+            <charset>UTF-8</charset> <!-- 此处设置字符集 -->
+        </encoder>
+    </appender>
     <root level="INFO">
         <appender-ref ref="STDOUT" />
     </root>
     <root name="com.dlf" level="INFO">
         <appender-ref ref="baseLog"/>
+    </root>
+    <root name="com.dlf" level="ERROR">
+        <appender-ref ref="errLog"/>
     </root>
 </configuration>
