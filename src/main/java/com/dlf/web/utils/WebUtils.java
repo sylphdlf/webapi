@@ -30,7 +30,7 @@ public class WebUtils {
     public static HttpHeaders getHeaders(){
         Subject subject = SecurityUtils.getSubject();
         HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setContentType(MediaType.parseMediaType("application/json; charset=UTF-8"));
         headers.set("userId", ((UserInfo)subject.getPrincipal()).getId() + "");
         headers.set("username", ((UserInfo)subject.getPrincipal()).getUsername());
         return headers;

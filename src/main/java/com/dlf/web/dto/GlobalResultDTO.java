@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 public class GlobalResultDTO<T> implements Serializable{
 
-    private static final long serialVersionUID = 1756332539164240473L;
+
     /**
      * 正确代码
      */
@@ -21,6 +21,7 @@ public class GlobalResultDTO<T> implements Serializable{
      * 错误代码
      */
     private static final String ERROR_CODE = GlobalResultEnum.FAIL.getCode();
+    private static final long serialVersionUID = 1756332539164240473L;
 
     /**
      * 返回（正确/错误）代码

@@ -51,7 +51,7 @@ public class FileController {
                 new ParameterizedTypeReference<GlobalResultDTO<FileResDTO>>() {});
         GlobalResultDTO<FileResDTO> resultDTO = responseEntity.getBody();
         if(null != resultDTO && resultDTO.isSuccess() && StringUtils.isNotBlank(resultDTO.getData() + "")){
-            return this.saveFile(file, entity, resultDTO);
+            return this.saveFile(file, entity, resultDTO.getData());
         }else if(null != resultDTO && resultDTO.isSuccess()){
             return resultDTO;
         }else {
@@ -71,7 +71,7 @@ public class FileController {
             return GlobalResultDTO.FAIL();
         }
         //保存文件
-        return this.saveFile(file, entity, resultDTO);
+        return this.saveFile(file, entity, resultDTO.getData());
     }
 
     private HttpEntity setDefaultParams(MultipartFile file, JSONObject jsonObject) throws IOException, NoSuchAlgorithmException {
@@ -84,22 +84,18 @@ public class FileController {
         return new HttpEntity<>(jsonObject, WebUtils.getHeaders());
     }
 
-    private GlobalResultDTO saveFile(MultipartFile file, HttpEntity entity, GlobalResultDTO resultDTO){
-        Consumer<FileResDTO> fileSaveConsumer = t -> {
-            try {
-                File fileSave = new File(t.getPath());
-                if(!fileSave.exists()){
-                    boolean mkdirs = fileSave.mkdirs();
-                }
-                file.transferTo(new File(t.getPath() + File.separator + t.getName()));
-            } catch (IOException e) {
-                this.rollback(entity);
+    private GlobalResultDTO saveFile(MultipartFile file, HttpEntity entity, FileResDTO resDTO){
+        try {
+            File fileSave = new File(resDTO.getPath());
+            if(!fileSave.exists()){
+                boolean mkdirs = fileSave.mkdirs();
             }
-        };
-        Optional.of(resultDTO)
-                .filter(t -> t.isSuccess() && null != t.getData())
-                .ifPresent(t -> fileSaveConsumer.accept((FileResDTO)t.getData()));
-        return GlobalResultDTO.SUCCESS();
+            file.transferTo(new File(resDTO.getPath() + File.separator + resDTO.getName()));
+            return GlobalResultDTO.SUCCESS();
+        } catch (IOException e) {
+            this.rollback(entity);
+        }
+        return GlobalResultDTO.FAIL();
     }
 
     private void rollback(HttpEntity entity){
