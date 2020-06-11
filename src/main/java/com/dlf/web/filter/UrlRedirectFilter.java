@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class UrlRedirectFilter implements Filter{
 
-    private static final ImmutableList<String> ignoreUri = ImmutableList.of("/login", "/register", "/logout", "/unAuth", "/file/upload");
+    private static final ImmutableList<String> ignoreUri = ImmutableList.of("/login", "/register", "/logout", "/unAuth", "/file/upload", "/file/download");
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

@@ -12,15 +12,16 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.URLEncoder;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
@@ -41,6 +42,7 @@ public class FileController {
     private static final String SAVE_FILE = "/file/save";
     private static final String SAVE_FILE_FROM_ORDER = "/file/saveFromOd";
     private static final String ROLLBACK_FILE = "/file/rollbackFromOd";
+    private static final String GET_PATH = "/file/download";
 
     @RequestMapping(value = "/upload")
     public GlobalResultDTO upload(MultipartFile file) throws NoSuchAlgorithmException, IOException {
@@ -57,6 +59,31 @@ public class FileController {
         }else {
             return GlobalResultDTO.FAIL();
         }
+    }
+
+    @RequestMapping(value = "/download", method = RequestMethod.GET)
+    public void download(@RequestParam("id") Long id, HttpServletResponse response) throws IOException {
+        JSONObject reqObj = new JSONObject();
+        reqObj.put("id", id);
+        HttpEntity entity = new HttpEntity<>(reqObj, WebUtils.getHeaders());
+        ResponseEntity<GlobalResultDTO<FileResDTO>> responseEntity = restTemplate.exchange(routerUrl + GET_PATH, HttpMethod.POST, entity,
+                new ParameterizedTypeReference<GlobalResultDTO<FileResDTO>>() {});
+        FileResDTO resDTO = Objects.requireNonNull(responseEntity.getBody()).getData();
+        response.setContentType("application/octet-stream");//
+        response.setHeader("content-type", "application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + URLEncoder.encode(resDTO.getName(),"UTF-8"));
+        OutputStream outputStream = response.getOutputStream();
+        byte[] buff = new byte[1024];
+        BufferedInputStream bis = null;
+        bis = new BufferedInputStream(new FileInputStream(new File(resDTO.getPath())));
+        int i = bis.read(buff);
+        while (i != -1) {
+            outputStream.write(buff, 0, buff.length);
+            outputStream.flush();
+            i = bis.read(buff);
+        }
+        bis.close();
+        outputStream.close();
     }
 
     @RequestMapping(value = "/uploadFromOd")

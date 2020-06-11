@@ -59,7 +59,8 @@ public class CommController {
         headers.set("url", requestUrl);
         headers.set("session_id", subject.getSession().getId() + "");
         HttpEntity entity = new HttpEntity<>(jsonObject,headers);
-        ResponseEntity<GlobalResultDTO> responseEntity = restTemplate.exchange(routerUrl + requestUrl, HttpMethod.POST, entity, new ParameterizedTypeReference<GlobalResultDTO>() {});
+        ResponseEntity<GlobalResultDTO<JSONObject>> responseEntity = restTemplate.exchange(routerUrl + requestUrl, HttpMethod.POST, entity,
+                new ParameterizedTypeReference<GlobalResultDTO<JSONObject>>() {});
         return responseEntity.getBody();
     }
 
