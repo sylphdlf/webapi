@@ -49,9 +49,9 @@ public class FileController {
         JSONObject reqObj = new JSONObject();
         reqObj.put("fileName", StringUtils.substringBeforeLast(file.getOriginalFilename(), "."));
         HttpEntity entity = this.setDefaultParams(file, reqObj);
-        ResponseEntity<GlobalResultDTO<FileResDTO>> responseEntity = restTemplate.exchange(routerUrl + SAVE_FILE, HttpMethod.POST, entity,
-                new ParameterizedTypeReference<GlobalResultDTO<FileResDTO>>() {});
-        GlobalResultDTO<FileResDTO> resultDTO = responseEntity.getBody();
+        ResponseEntity<GlobalResultDTO<JSONObject>> responseEntity = restTemplate.exchange(routerUrl + SAVE_FILE, HttpMethod.POST, entity,
+                new ParameterizedTypeReference<GlobalResultDTO<JSONObject>>() {});
+        GlobalResultDTO<JSONObject> resultDTO = responseEntity.getBody();
         if(null != resultDTO && resultDTO.isSuccess() && StringUtils.isNotBlank(resultDTO.getData() + "")){
             return this.saveFile(file, entity, resultDTO.getData());
         }else if(null != resultDTO && resultDTO.isSuccess()){
@@ -91,9 +91,9 @@ public class FileController {
         JSONObject reqObj = new JSONObject();
         reqObj.put("orderId", orderId);
         HttpEntity entity = this.setDefaultParams(file, reqObj);
-        ResponseEntity<GlobalResultDTO<FileResDTO>> responseEntity = restTemplate.exchange(routerUrl + SAVE_FILE_FROM_ORDER, HttpMethod.POST, entity,
-                new ParameterizedTypeReference<GlobalResultDTO<FileResDTO>>() {});
-        GlobalResultDTO<FileResDTO> resultDTO = responseEntity.getBody();
+        ResponseEntity<GlobalResultDTO<JSONObject>> responseEntity = restTemplate.exchange(routerUrl + SAVE_FILE_FROM_ORDER, HttpMethod.POST, entity,
+                new ParameterizedTypeReference<GlobalResultDTO<JSONObject>>() {});
+        GlobalResultDTO<JSONObject> resultDTO = responseEntity.getBody();
         if(null == resultDTO || resultDTO.isFail()){
             return GlobalResultDTO.FAIL();
         }
@@ -111,13 +111,15 @@ public class FileController {
         return new HttpEntity<>(jsonObject, WebUtils.getHeaders());
     }
 
-    private GlobalResultDTO saveFile(MultipartFile file, HttpEntity entity, FileResDTO resDTO){
+    private GlobalResultDTO saveFile(MultipartFile file, HttpEntity entity, JSONObject jsonObject){
         try {
-            File fileSave = new File(resDTO.getPath());
+            String path = jsonObject.getString("path");
+            String name = jsonObject.getString("name");
+            File fileSave = new File(path);
             if(!fileSave.exists()){
                 boolean mkdirs = fileSave.mkdirs();
             }
-            file.transferTo(new File(resDTO.getPath() + File.separator + resDTO.getName()));
+            file.transferTo(new File(path + File.separator + name));
             return GlobalResultDTO.SUCCESS();
         } catch (IOException e) {
             this.rollback(entity);
