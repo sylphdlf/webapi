@@ -4,12 +4,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 public class UserInfo implements Serializable{
 
-    private static final long serialVersionUID = -2047610454774672454L;
 
+    private static final long serialVersionUID = 3486569872589078064L;
     private Long id;
 
     private String username;
@@ -19,5 +21,9 @@ public class UserInfo implements Serializable{
     private Integer isAdmin;
 
     private String ip;
+
+    private String lastIp;
+
+    private Date updateTime;
 
 }

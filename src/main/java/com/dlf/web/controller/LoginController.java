@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Administrator on 2017/5/7.
  */
@@ -29,7 +32,12 @@ public class LoginController {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.getString("username"), jsonObject.getString("password"));
         subject.login(token);
-        return GlobalResultDTO.SUCCESS(subject.getSession().getId().toString());
+        UserInfo principal = (UserInfo) subject.getPrincipal();
+        Map<String, Object> resultMap = new HashMap<>();
+        resultMap.put("lastIp", principal.getLastIp());
+        resultMap.put("sessionId", subject.getSession().getId().toString());
+        resultMap.put("lastLoginTime", principal.getUpdateTime());
+        return GlobalResultDTO.SUCCESS(resultMap);
     }
 
     /**
