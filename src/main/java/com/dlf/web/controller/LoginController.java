@@ -5,6 +5,7 @@ import com.dlf.web.anno.UrlPermissionIgnoreAnno;
 import com.dlf.web.dto.GlobalResultDTO;
 import com.dlf.web.dto.UserInfo;
 import com.dlf.web.enums.GlobalResultEnum;
+import com.dlf.web.utils.WebUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +30,7 @@ public class LoginController {
      */
     @UrlPermissionIgnoreAnno
     @RequestMapping(value = "/login",method = RequestMethod.POST)
-    public GlobalResultDTO login(@RequestBody JSONObject jsonObject) {
+    public GlobalResultDTO login(@RequestBody JSONObject jsonObject, HttpServletRequest request) {
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(jsonObject.getString("username"), jsonObject.getString("password"));
         subject.login(token);
@@ -37,6 +39,7 @@ public class LoginController {
         resultMap.put("lastIp", principal.getLastIp());
         resultMap.put("sessionId", subject.getSession().getId().toString());
         resultMap.put("lastLoginTime", principal.getUpdateTime());
+        resultMap.put("ip", WebUtils.getRealIP(request));
         return GlobalResultDTO.SUCCESS(resultMap);
     }
 
