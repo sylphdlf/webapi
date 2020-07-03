@@ -11,6 +11,14 @@ spring:
     password:
     port: 6379
     timeout: 300
+  rabbitmq:
+    addresses: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      direct:
+        acknowledge-mode: manual
 eureka:
   client:
     service-url:
